@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nba-simulator-app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - db
+    networks:
+      - nba-network
+
+  nginx:
+    image: nginx:1.21-alpine
+    container_name: nba-simulator-nginx
+    restart: unless-stopped
+    ports:
+      - "8090:80"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+    networks:
+      - nba-network
+
+  db:
+    image: postgres:14-alpine
+    container_name: nba-simulator-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-nba_simulator}
+      POSTGRES_USER: ${DB_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "7432:5432"
+    networks:
+      - nba-network
+
+  node:
+    image: node:18-alpine
+    container_name: nba-simulator-node
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    command: sh -c "npm install && npm run dev"
+    depends_on:
+      - app
+    networks:
+      - nba-network
+
+networks:
+  nba-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
