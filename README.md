@@ -64,6 +64,9 @@ docker-compose exec app php artisan db:seed
 ```
 
 8. Access the application:
+```bash
+http://localhost:8090/simulation/live
+```
 
 
 ## Commands
@@ -87,6 +90,11 @@ docker-compose exec app php artisan db:seed
 - Live score updates
 - Player statistics tracking
 - Team standings
+- Advanced scheduling with team rotation (no rematches in the same week)
+- Attack count
+- Player based assists
+- Player based 2 or 3 points success rate
+- Real time top scorer and assist
 
 ## Contributors
 

@@ -91,6 +91,14 @@ class Game extends Model
     }
 
     /**
+     * Get all game statistics for this game
+     */
+    public function gameStatistics(): HasMany
+    {
+        return $this->hasMany(GameStatistic::class);
+    }
+
+    /**
      * Get all game events for this game
      */
     public function events(): HasMany

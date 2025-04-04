@@ -24,4 +24,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// Live Simulation Routes
+Route::get('/simulation/live', function () {
+    return Inertia::render('Simulation/LiveSimulation');
+})->name('simulation.live');
+
 require __DIR__.'/auth.php';
